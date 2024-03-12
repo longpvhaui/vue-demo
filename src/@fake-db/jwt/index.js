@@ -5,7 +5,7 @@ const data = {
   users: [
     {
       id: 1,
-      fullName: 'John Doe',
+      fullName: 'BIC',
       username: 'johndoe',
       password: 'admin',
       // eslint-disable-next-line global-require

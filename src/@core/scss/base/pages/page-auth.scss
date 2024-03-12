@@ -56,7 +56,7 @@ $auth-1-inner-max-width: 400px !default;
       height: calc(var(--vh, 1vh) * 100);
     }
     .brand-logo {
-      position: absolute;
+      padding-bottom: 20px;
       top: 2rem;
       left: 2rem;
       margin: 0;

@@ -1,7 +1,7 @@
 export default [
-     {
-          title: 'Brand',
-          route: 'brand',
-          icon: 'ShoppingCartIcon',
-     },
+  {
+    title: 'Brand',
+    route: 'brand',
+    icon: 'ShoppingCartIcon',
+  },
 ]
