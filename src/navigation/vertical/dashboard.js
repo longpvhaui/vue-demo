@@ -1,18 +1,14 @@
 export default [
   {
     title: 'Dashboards',
-    icon: 'HomeIcon',
-    tag: '2',
-    tagVariant: 'light-warning',
+    icon: { icon: 'tabler-smart-home' },
     children: [
       {
-        title: 'eCommerce',
-        route: 'dashboard-ecommerce',
-      },
-      {
-        title: 'Analytics',
-        route: 'dashboard-analytics',
+        title: 'CRM',
+        to: 'dashboards-crm',
       },
     ],
+    badgeContent: '3',
+    badgeClass: 'bg-primary',
   },
 ]

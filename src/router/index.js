@@ -1,61 +1,74 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { canNavigate } from '@layouts/plugins/casl'
+import { setupLayouts } from 'virtual:generated-layouts'
+import { createRouter, createWebHistory } from 'vue-router'
+import routes from '~pages'
+import { isUserLoggedIn } from './utils'
 
-// Routes
-import { canNavigate } from '@/libs/acl/routeProtection'
-import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
-import dashboard from './routes/dashboard'
-import pages from './routes/pages'
-import brands from './routes/brand'
-
-Vue.use(VueRouter)
-
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  scrollBehavior() {
-    return { x: 0, y: 0 }
-  },
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', redirect: { name: 'dashboard-ecommerce' } },
-    ...dashboard,
-    ...pages,
-    ...brands,
+    // ℹ️ We are redirecting to different pages based on role.
+    // NOTE: Role is just for UI purposes. ACL is based on abilities.
     {
-      path: '*',
-      redirect: 'error-404',
+      path: '/',
+      redirect: to => {
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}')
+        const userRole = (userData && userData.role) ? userData.role : null
+        if (userRole === 'admin')
+          return { name: 'dashboards-analytics' }
+        if (userRole === 'client')
+          return { name: 'access-control' }
+        
+        return { name: 'login', query: to.query }
+      },
     },
+    {
+      path: '/pages/user-profile',
+      redirect: () => ({ name: 'pages-user-profile-tab', params: { tab: 'profile' } }),
+    },
+    {
+      path: '/pages/account-settings',
+      redirect: () => ({ name: 'pages-account-settings-tab', params: { tab: 'account' } }),
+    },
+    ...setupLayouts(routes),
   ],
 })
 
-router.beforeEach((to, _, next) => {
+
+// Docs: https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
+router.beforeEach(to => {
   const isLoggedIn = isUserLoggedIn()
 
-  if (!canNavigate(to)) {
-    // Redirect to login if not logged in
-    if (!isLoggedIn) return next({ name: 'auth-login' })
-
-    // If logged in => not authorized
-    return next({ name: 'misc-not-authorized' })
+  /*
+  
+    ℹ️ Commented code is legacy code
+  
+    if (!canNavigate(to)) {
+      // Redirect to login if not logged in
+      // ℹ️ Only add `to` query param if `to` route is not index route
+      if (!isLoggedIn)
+        return next({ name: 'login', query: { to: to.name !== 'index' ? to.fullPath : undefined } })
+  
+      // If logged in => not authorized
+      return next({ name: 'not-authorized' })
+    }
+  
+    // Redirect if logged in
+    if (to.meta.redirectIfLoggedIn && isLoggedIn)
+      next('/')
+  
+    return next()
+  
+    */
+  if (canNavigate(to)) {
+    if (to.meta.redirectIfLoggedIn && isLoggedIn)
+      return '/'
   }
-
-  // Redirect if logged in
-  if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-    const userData = getUserData()
-    next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
+  else {
+    if (isLoggedIn)
+      return { name: 'not-authorized' }
+    else
+      return { name: 'login', query: { to: to.name !== 'index' ? to.fullPath : undefined } }
   }
-
-  return next()
 })
-
-// ? For splash screen
-// Remove afterEach hook if you are not using splash screen
-router.afterEach(() => {
-  // Remove initial loading
-  const appLoading = document.getElementById('loading-bg')
-  if (appLoading) {
-    appLoading.style.display = 'none'
-  }
-})
-
 export default router

@@ -1,153 +1,91 @@
 export default [
   {
-    header: 'Pages',
-    icon: 'FileTextIcon',
+    title: 'Pages',
+    icon: { icon: 'tabler-file' },
     children: [
       {
-        title: 'Authentication',
-        icon: 'LockIcon',
-        children: [
-          {
-            title: 'Login v1',
-            route: 'auth-login-v1',
-            target: '_blank',
-          },
-          {
-            title: 'Login v2',
-            route: 'auth-login-v2',
-            target: '_blank',
-          },
-          {
-            title: 'Register v1',
-            route: 'auth-register-v1',
-            target: '_blank',
-          },
-          {
-            title: 'Register v2',
-            route: 'auth-register-v2',
-            target: '_blank',
-          },
-          {
-            title: 'Forgot Password v1',
-            route: 'auth-forgot-password-v1',
-            target: '_blank',
-          },
-          {
-            title: 'Forgot Password v2',
-            route: 'auth-forgot-password-v2',
-            target: '_blank',
-          },
-          {
-            title: 'Reset Password v1',
-            route: 'auth-reset-password-v1',
-            target: '_blank',
-          },
-          {
-            title: 'Reset Password v2',
-            route: 'auth-reset-password-v2',
-            target: '_blank',
-          },
-        ],
+        title: 'User Profile',
+        icon: { icon: 'tabler-user-circle' },
+        to: { name: 'pages-user-profile-tab', params: { tab: 'profile' } },
       },
       {
         title: 'Account Settings',
-        route: 'pages-account-setting',
-        icon: 'SettingsIcon',
+        icon: { icon: 'tabler-settings' },
+        to: { name: 'pages-account-settings-tab', params: { tab: 'account' } },
       },
+      { title: 'FAQ', icon: { icon: 'tabler-help' }, to: 'pages-faq' },
+      { title: 'Help Center', icon: { icon: 'tabler-lifebuoy' }, to: 'pages-help-center' },
+      { title: 'Pricing', icon: { icon: 'tabler-diamond' }, to: 'pages-pricing' },
       {
-        title: 'Profile',
-        route: 'pages-profile',
-        icon: 'UserIcon',
-      },
-      {
-        title: 'Faq',
-        route: 'pages-faq',
-        icon: 'HelpCircleIcon',
-      },
-      {
-        title: 'Knowledge Base',
-        route: 'pages-knowledge-base',
-        icon: 'AlertCircleIcon',
-      },
-      {
-        title: 'Pricing',
-        route: 'pages-pricing',
-        icon: 'DollarSignIcon',
-      },
-      {
-        title: 'Blog',
-        icon: 'ClipboardIcon',
+        title: 'Misc',
+        icon: { icon: 'tabler-3d-cube-sphere' },
         children: [
-          {
-            title: 'List',
-            route: 'pages-blog-list',
-          },
-          {
-            title: 'Detail',
-            route: { name: 'pages-blog-detail', params: { id: 1 } },
-          },
-          {
-            title: 'Edit',
-            route: { name: 'pages-blog-edit', params: { id: 1 } },
-          },
+          { title: 'Coming Soon', to: 'pages-misc-coming-soon' },
+          { title: 'Under Maintenance', to: 'pages-misc-under-maintenance', target: '_blank' },
+          { title: 'Page Not Found - 404', to: 'pages-misc-not-found', target: '_blank' },
+          { title: 'Not Authorized - 401', to: 'pages-misc-not-authorized', target: '_blank' },
+          { title: 'Server Error - 500', to: 'pages-misc-internal-server-error', target: '_blank' },
         ],
       },
       {
-        title: 'Mail Templates',
-        icon: 'MailIcon',
+        title: 'Authentication',
+        icon: { icon: 'tabler-lock' },
         children: [
           {
-            title: 'Welcome',
-            href: 'https://pixinvent.com/demo/vuexy-mail-template/mail-welcome.html',
+            title: 'Login',
+            children: [
+              { title: 'Login v1', to: 'pages-authentication-login-v1', target: '_blank' },
+              { title: 'Login v2', to: 'pages-authentication-login-v2', target: '_blank' },
+            ],
           },
           {
-            title: 'Reset Password',
-            href: 'https://pixinvent.com/demo/vuexy-mail-template/mail-reset-password.html',
+            title: 'Register',
+            children: [
+              { title: 'Register v1', to: 'pages-authentication-register-v1', target: '_blank' },
+              { title: 'Register v2', to: 'pages-authentication-register-v2', target: '_blank' },
+              { title: 'Register Multi-Steps', to: 'pages-authentication-register-multi-steps', target: '_blank' },
+            ],
           },
           {
             title: 'Verify Email',
-            href: 'https://pixinvent.com/demo/vuexy-mail-template/mail-verify-email.html',
+            children: [
+              { title: 'Verify Email v1', to: 'pages-authentication-verify-email-v1', target: '_blank' },
+              { title: 'Verify Email v2', to: 'pages-authentication-verify-email-v2', target: '_blank' },
+            ],
           },
           {
-            title: 'Deactivate Account',
-            href: 'https://pixinvent.com/demo/vuexy-mail-template/mail-deactivate-account.html',
+            title: 'Forgot Password',
+            children: [
+              { title: 'Forgot Password v1', to: 'pages-authentication-forgot-password-v1', target: '_blank' },
+              { title: 'Forgot Password v2', to: 'pages-authentication-forgot-password-v2', target: '_blank' },
+            ],
           },
           {
-            title: 'Invoice',
-            href: 'https://pixinvent.com/demo/vuexy-mail-template/mail-invoice.html',
+            title: 'Reset Password',
+            children: [
+              { title: 'Reset Password v1', to: 'pages-authentication-reset-password-v1', target: '_blank' },
+              { title: 'Reset Password v2', to: 'pages-authentication-reset-password-v2', target: '_blank' },
+            ],
           },
           {
-            title: 'Promotional',
-            href: 'https://pixinvent.com/demo/vuexy-mail-template/mail-promotional.html',
+            title: 'Two Steps',
+            children: [
+              { title: 'Two Steps v1', to: 'pages-authentication-two-steps-v1', target: '_blank' },
+              { title: 'Two Steps v2', to: 'pages-authentication-two-steps-v2', target: '_blank' },
+            ],
           },
         ],
       },
       {
-        title: 'Miscellaneous',
-        icon: 'FileIcon',
+        title: 'Wizard Pages',
+        icon: { icon: 'tabler-forms' },
         children: [
-          {
-            title: 'Coming Soon',
-            route: 'misc-coming-soon',
-            target: '_blank',
-          },
-          {
-            title: 'Not Authorized',
-            route: 'misc-not-authorized',
-            target: '_blank',
-          },
-          {
-            title: 'Under Maintenance',
-            route: 'misc-under-maintenance',
-            target: '_blank',
-          },
-          {
-            title: 'Error',
-            route: 'misc-error',
-            target: '_blank',
-          },
+          { title: 'Checkout', to: { name: 'wizard-examples-checkout' } },
+          { title: 'Property Listing', to: { name: 'wizard-examples-property-listing' } },
+          { title: 'Create Deal', to: { name: 'wizard-examples-create-deal' } },
         ],
       },
+      { title: 'Dialog Examples', icon: { icon: 'tabler-square' }, to: 'pages-dialog-examples' },
     ],
   },
 ]

@@ -1,132 +1,142 @@
 import mock from '@/@fake-db/mock'
-import jwt from 'jsonwebtoken'
+import { genId } from '@/@fake-db/utils'
+import avatar1 from '@images/avatars/avatar-1.png'
+import avatar2 from '@images/avatars/avatar-2.png'
 
-const data = {
-  users: [
-    {
-      id: 1,
-      fullName: 'BIC',
-      username: 'johndoe',
-      password: 'admin',
-      // eslint-disable-next-line global-require
-      avatar: require('@/assets/images/avatars/13-small.png'),
-      email: 'admin@demo.com',
-      role: 'admin',
-      ability: [
-        {
-          action: 'manage',
-          subject: 'all',
-        },
-      ],
-      extras: {
-        eCommerceCartItemsCount: 5,
+
+// TODO: Use jsonwebtoken pkg
+// ℹ️ Created from https://jwt.io/ using HS256 algorithm
+// ℹ️ We didn't created it programmatically because jsonwebtoken package have issues with esm support. View Issues: https://github.com/auth0/node-jsonwebtoken/issues/655
+const userTokens = [
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.fhc3wykrAnRpcKApKhXiahxaOe8PSHatad31NuIZ0Zg',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mn0.cat2xMrZLn0FwicdGtZNzL7ifDTAKWB0k1RurSWjdnw',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6M30.PGOfMaZA_T9W05vMj5FYXG5d47soSPJD1WuxeUfw4L4',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NH0.d_9aq2tpeA9-qpqO0X4AmW6gU2UpWkXwc04UJYFWiZE',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NX0.ocO77FbjOSU1-JQ_BilEZq2G_M8bCiB10KYqtfkv1ss',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nn0.YgQILRqZy8oefhTZgJJfiEzLmhxQT_Bd2510OvrrwB8',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6N30.KH9RmOWIYv_HONxajg7xBIJXHEUvSdcBygFtS2if8Jk',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OH0.shrp-oMHkVAkiMkv_aIvSx3k6Jk-X7TrH5UeufChz_g',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OX0.9JD1MR3ZkwHzhl4mOHH6lGG8hOVNZqDNH6UkFzjCqSE',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTB9.txWLuN4QT5PqTtgHmlOiNerIu5Do51PpYOiZutkyXYg',
+]
+
+
+// ❗ These two secrets shall be in .env file and not in any other file
+// const jwtSecret = 'dd5f3089-40c3-403d-af14-d0c228b05cb4'
+const database = [
+  {
+    id: 1,
+    fullName: 'John Doe',
+    username: 'johndoe',
+    password: 'admin',
+    avatar: avatar1,
+    email: 'admin@demo.com',
+    role: 'admin',
+    abilities: [
+      {
+        action: 'manage',
+        subject: 'all',
       },
-    },
-    {
-      id: 2,
-      fullName: 'Jane Doe',
-      username: 'janedoe',
-      password: 'client',
-      // eslint-disable-next-line global-require
-      avatar: require('@/assets/images/avatars/1-small.png'),
-      email: 'client@demo.com',
-      role: 'client',
-      ability: [
-        {
-          action: 'read',
-          subject: 'ACL',
-        },
-        {
-          action: 'read',
-          subject: 'Auth',
-        },
-      ],
-      extras: {
-        eCommerceCartItemsCount: 5,
+    ],
+  },
+  {
+    id: 2,
+    fullName: 'Jane Doe',
+    username: 'janedoe',
+    password: 'client',
+    avatar: avatar2,
+    email: 'client@demo.com',
+    role: 'client',
+    abilities: [
+      {
+        action: 'read',
+        subject: 'Auth',
       },
-    },
-  ],
-}
+      {
+        action: 'read',
+        subject: 'AclDemo',
+      },
+    ],
+  },
+]
 
-// ! These two secrets shall be in .env file and not in any other file
-const jwtConfig = {
-  secret: 'dd5f3089-40c3-403d-af14-d0c228b05cb4',
-  refreshTokenSecret: '7c4c1c50-3230-45bf-9eae-c9b2e401c767',
-  expireTime: '10m',
-  refreshTokenExpireTime: '10m',
-}
-
-mock.onPost('/jwt/login').reply(request => {
+mock.onPost('/auth/login').reply(request => {
   const { email, password } = JSON.parse(request.data)
-
-  let error = {
+  let errors = {
     email: ['Something went wrong'],
   }
-
-  const user = data.users.find(u => u.email === email && u.password === password)
-
+  const user = database.find(u => u.email === email && u.password === password)
   if (user) {
     try {
-      const accessToken = jwt.sign({ id: user.id }, jwtConfig.secret, { expiresIn: jwtConfig.expireTime })
-      const refreshToken = jwt.sign({ id: user.id }, jwtConfig.refreshTokenSecret, {
-        expiresIn: jwtConfig.refreshTokenExpireTime,
-      })
+      const accessToken = userTokens[user.id]
 
+      // We are duplicating user here
       const userData = { ...user }
 
-      delete userData.password
+      const userOutData = Object.fromEntries(Object.entries(userData)
+        .filter(([key, _]) => !(key === 'password' || key === 'abilities')))
 
       const response = {
-        userData,
+        userAbilities: userData.abilities,
         accessToken,
-        refreshToken,
+        userData: userOutData,
       }
 
+
+      //   const accessToken = jwt.sign({ id: user.id }, jwtSecret)
       return [200, response]
-    } catch (e) {
-      error = e
     }
-  } else {
-    error = {
+    catch (e) {
+      errors = { email: [e] }
+    }
+  }
+  else {
+    errors = {
       email: ['Email or Password is Invalid'],
     }
   }
-
-  return [400, { error }]
+  
+  return [400, { errors }]
 })
-
-mock.onPost('/jwt/register').reply(request => {
+mock.onPost('/auth/register').reply(request => {
   const { username, email, password } = JSON.parse(request.data)
 
   // If not any of data is missing return 400
-  if (!(username && email && password)) return [400]
+  if (!(username && email && password))
+    return [400]
+  const isEmailAlreadyInUse = database.find(user => user.email === email)
+  const isUsernameAlreadyInUse = database.find(user => user.username === username)
 
-  const isEmailAlreadyInUse = data.users.find(user => user.email === email)
-  const isUsernameAlreadyInUse = data.users.find(user => user.username === username)
-
-  const error = {
+  const errors = {
     password: !password ? ['Please enter password'] : null,
     email: (() => {
-      if (!email) return ['Please enter your email.']
-      if (isEmailAlreadyInUse) return ['This email is already in use.']
+      if (!email)
+        return ['Please enter your email.']
+      if (isEmailAlreadyInUse)
+        return ['This email is already in use.']
+      
       return null
     })(),
     username: (() => {
-      if (!username) return ['Please enter your username.']
-      if (isUsernameAlreadyInUse) return ['This username is already in use.']
+      if (!username)
+        return ['Please enter your username.']
+      if (isUsernameAlreadyInUse)
+        return ['This username is already in use.']
+      
       return null
     })(),
   }
 
-  if (!error.username && !error.email) {
+  if (!errors.username && !errors.email) {
+    // Calculate user id
     const userData = {
+      id: genId(database),
       email,
       password,
       username,
       fullName: '',
-      avatar: null,
       role: 'admin',
-      ability: [
+      abilities: [
         {
           action: 'manage',
           subject: 'all',
@@ -134,53 +144,19 @@ mock.onPost('/jwt/register').reply(request => {
       ],
     }
 
-    // Add user id
-    const { length } = data.users
-    let lastIndex = 0
-    if (length) {
-      lastIndex = data.users[length - 1].id
-    }
-    userData.id = lastIndex + 1
+    database.push(userData)
 
-    data.users.push(userData)
+    const accessToken = userTokens[userData.id]
+    const { password: _, abilities, ...user } = userData
 
-    const accessToken = jwt.sign({ id: userData.id }, jwtConfig.secret, { expiresIn: jwtConfig.expireTime })
-
-    const user = { ...userData }
-    delete user.password
     const response = {
       userData: user,
       accessToken,
+      userAbilities: abilities,
     }
 
     return [200, response]
   }
-  return [400, { error }]
-})
-
-mock.onPost('/jwt/refresh-token').reply(request => {
-  const { refreshToken } = JSON.parse(request.data)
-
-  try {
-    const { id } = jwt.verify(refreshToken, jwtConfig.refreshTokenSecret)
-
-    const userData = { ...data.users.find(user => user.id === id) }
-
-    const newAccessToken = jwt.sign({ id: userData.id }, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn })
-    const newRefreshToken = jwt.sign({ id: userData.id }, jwtConfig.refreshTokenSecret, {
-      expiresIn: jwtConfig.refreshTokenExpireTime,
-    })
-
-    delete userData.password
-    const response = {
-      userData,
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
-    }
-
-    return [200, response]
-  } catch (e) {
-    const error = 'Invalid refresh token'
-    return [401, { error }]
-  }
+  
+  return [400, { error: errors }]
 })

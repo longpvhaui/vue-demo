@@ -1,37 +1,46 @@
-// Theme Colors
-// Initially this will be blank. Later on when app is initialized we will assign bootstrap colors to this from CSS variables.
-export const $themeColors = {}
+import { breakpointsVuetify } from '@vueuse/core'
+import { VIcon } from 'vuetify/components/VIcon'
 
-// App Breakpoints
-// Initially this will be blank. Later on when app is initialized we will assign bootstrap breakpoints to this object from CSS variables.
-export const $themeBreakpoints = {}
+// ❗ Logo SVG must be imported with ?raw suffix
+import logo from '@images/logo.svg?raw'
+import { defineThemeConfig } from '@core'
+import { RouteTransitions, Skins } from '@core/enums'
+import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
-// APP CONFIG
-export const $themeConfig = {
+export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
-    appName: 'Bancassurance', // Will update name in navigation menu (Branding)
-    // eslint-disable-next-line global-require
-    appLogoImage: require('@/assets/images/bic/logo-vi.png'), // Will update logo in navigation menu (Branding)
+    title: 'vuexy',
+    logo: h('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary))' }),
+    contentWidth: ContentWidth.Boxed,
+    contentLayoutNav: AppContentLayoutNav.Vertical,
+    overlayNavFromBreakpoint: breakpointsVuetify.md + 16,
+    enableI18n: true,
+    theme: 'system',
+    isRtl: false,
+    skin: Skins.Default,
+    routeTransition: RouteTransitions.Fade,
+    iconRenderer: VIcon,
   },
-  layout: {
-    isRTL: false,
-    skin: 'light', // light, dark, bordered, semi-dark
-    routerTransition: 'zoom-fade', // zoom-fade, slide-fade, fade-bottom, fade, zoom-out, none
-    type: 'vertical', // vertical, horizontal
-    contentWidth: 'full', // full, boxed
-    menu: {
-      hidden: false,
-      isCollapsed: false,
-    },
-    navbar: {
-      // ? For horizontal menu, navbar type will work for navMenu type
-      type: 'floating', // static , sticky , floating, hidden
-      backgroundColor: '', // BS color options [primary, success, etc]
-    },
-    footer: {
-      type: 'static', // static, sticky, hidden
-    },
-    customizer: true,
-    enableScrollToTop: true,
+  navbar: {
+    type: NavbarType.Sticky,
+    navbarBlur: true,
   },
-}
+  footer: { type: FooterType.Static },
+  verticalNav: {
+    isVerticalNavCollapsed: false,
+    defaultNavItemIconProps: { icon: 'tabler-circle', size: 10 },
+    isVerticalNavSemiDark: false,
+  },
+  horizontalNav: {
+    type: 'sticky',
+    transition: 'slide-y-reverse-transition',
+  },
+  icons: {
+    chevronDown: { icon: 'tabler-chevron-down' },
+    chevronRight: { icon: 'tabler-chevron-right', size: 18 },
+    close: { icon: 'tabler-x' },
+    verticalNavPinned: { icon: 'tabler-circle-dot' },
+    verticalNavUnPinned: { icon: 'tabler-circle' },
+    sectionTitlePlaceholder: { icon: 'tabler-separator' },
+  },
+})
