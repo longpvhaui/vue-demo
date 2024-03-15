@@ -1,7 +1,7 @@
+import { useLayouts } from '@layouts'
 import { useDynamicVhCssProperty } from './composable/useDynamicVhCssProperty'
 import { config } from './config'
 import { ContentWidth } from './enums'
-import { useLayouts } from '@layouts'
 
 const { _setAppDir } = useLayouts()
 

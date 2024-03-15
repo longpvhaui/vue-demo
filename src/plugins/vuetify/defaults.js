@@ -168,6 +168,8 @@ export default {
   },
   VDataTable: {
     VDataTableFooter: {
+      itemsPerPageText: 'Số bản ghi/ trang:',
+      pageText: '{0}-{1} trên {2}',
       VBtn: {
         density: 'comfortable',
         color: 'default',

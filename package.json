@@ -3,7 +3,7 @@
   "version": "8.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 8080",
     "build": "vite build",
     "preview": "vite preview --port 5050",
     "lint": "eslint . -c .eslintrc.js --fix --ext .ts,.js,.vue,.tsx,.jsx",
@@ -37,6 +37,7 @@
     "vue3-apexcharts": "1.4.1",
     "vue3-perfect-scrollbar": "1.6.1",
     "vuetify": "3.2.1",
+    "vuex": "^4.1.0",
     "webfontloader": "1.6.28"
   },
   "devDependencies": {
