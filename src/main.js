@@ -3,7 +3,6 @@ import '@/@fake-db/db'
 import '@/@iconify/icons-bundle'
 import App from '@/App.vue'
 import ability from '@/plugins/casl/ability'
-import i18n from '@/plugins/i18n'
 import layoutsPlugin from '@/plugins/layouts'
 import vuetify from '@/plugins/vuetify'
 import { loadFonts } from '@/plugins/webfontloader'
@@ -28,7 +27,8 @@ app.use(createPinia())
 app.use(store)
 app.use(router)
 app.use(layoutsPlugin)
-app.use(i18n)
+
+// app.use(i18n)
 app.use(abilitiesPlugin, ability, {
   useGlobalProperties: true,
 })

@@ -5,7 +5,6 @@ export default [
     icon: { icon: 'tabler-command' },
     to: 'access-control',
     action: 'read',
-    subject: 'AclDemo',
   },
   {
     title: 'Nav Levels',

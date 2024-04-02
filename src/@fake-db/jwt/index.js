@@ -1,5 +1,4 @@
 import mock from '@/@fake-db/mock'
-import { genId } from '@/@fake-db/utils'
 import avatar1 from '@images/avatars/avatar-1.png'
 import avatar2 from '@images/avatars/avatar-2.png'
 
@@ -53,7 +52,7 @@ const database = [
         subject: 'Auth',
       },
       {
-        action: 'read',
+        action: 'manage',
         subject: 'AclDemo',
       },
     ],
@@ -130,7 +129,7 @@ mock.onPost('/auth/register').reply(request => {
   if (!errors.username && !errors.email) {
     // Calculate user id
     const userData = {
-      id: genId(database),
+      id: 0,
       email,
       password,
       username,

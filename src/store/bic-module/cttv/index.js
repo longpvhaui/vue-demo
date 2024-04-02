@@ -3,26 +3,26 @@ import axios from "@/plugins/axios"
 export default {
   namespaced: true,
   state: {
-    brand: {},
-    brands: [],
+    cttv: {},
+    listCTTV: [],
   },
   getters: {
 
   },
   mutations: {
-    SET_NAME(state, results){
-      state.brands = results
+    SET_LIST(state, results){
+      state.listCTTV = results
     },
-    SET_DETAIL(state, results){
-      state.brand = results
+    SET_CTTV(state, results){
+      state.cttv = results
     },
   },
   actions: {
-    fetchBrandName({ commit }, item){
+    fetchListCTTV({ commit }, item){
       return new Promise((resolve, reject) => {
-        axios.post(`/api/ToChuc/search`, item)
+        axios.post(`/api/CTTV/search`, item)
           .then(response=>{
-            commit('SET_NAME', response.data)
+            commit('SET_LIST', response.data)
             resolve(response)           
           })
           .catch(error => {
@@ -30,12 +30,11 @@ export default {
           })
       })
     },
-
     getDetail( { commit }, item){
       return new Promise((resolve, reject) => {
-        axios.post('/api/ToChuc/detail', item)
+        axios.post('/api/CTTV/detail', item)
           .then(response=>{
-            commit('SET_DETAIL', response.data[0])
+            commit('SET_CTTV', response.data[0])
             resolve(response) 
           }).catch(error => {
             reject(error)

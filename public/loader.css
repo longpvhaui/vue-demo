@@ -37,9 +37,9 @@ html {
 .loading .effect-3 {
   position: absolute;
   box-sizing: border-box;
-  border: 3px solid transparent;
+  border: 0px solid transparent;
   block-size: 100%;
-  border-inline-start: 3px solid var(--initial-loader-color, #eee);
+
   border-radius: 50%;
   inline-size: 100%;
 }

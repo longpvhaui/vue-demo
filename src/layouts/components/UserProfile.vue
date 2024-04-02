@@ -28,24 +28,6 @@ const userProfileList = [
   { type: 'divider' },
   {
     type: 'navItem',
-    icon: 'tabler-user',
-    title: 'Profile',
-    to: {
-      name: 'apps-user-view-id',
-      params: { id: 21 },
-    },
-  },
-  {
-    type: 'navItem',
-    icon: 'tabler-settings',
-    title: 'Settings',
-    to: {
-      name: 'pages-account-settings-tab',
-      params: { tab: 'account' },
-    },
-  },
-  {
-    type: 'navItem',
     icon: 'tabler-logout',
     title: 'Logout',
     onClick: logout,
@@ -62,6 +44,12 @@ const userProfileList = [
     offset-y="3"
     color="success"
   >
+    <div class="user-nav">
+      <p class="user-name mb-0">
+        {{ userData.fullName || userData.username }}
+      </p>
+      <span class="user-status">{{ userData.role }}</span>
+    </div>
     <VAvatar
       class="cursor-pointer"
       :color="!(userData && userData.avatar) ? 'primary' : undefined"
@@ -158,3 +146,21 @@ const userProfileList = [
     </VAvatar>
   </VBadge>
 </template>
+
+<style>
+  .user-nav{
+    float: left;
+    margin-right: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .user-name{
+      font-weight: 600 !important;
+  }
+
+  .user-status{
+    font-size: small;
+  }
+</style>

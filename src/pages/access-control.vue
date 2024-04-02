@@ -27,7 +27,8 @@
 </template>
 
 <route lang="yaml">
-meta:
-  action: read
-  subject: AclDemo
-</route>
+  meta:
+    layout: default
+    action: read
+    subject: AclDemo
+  </route>

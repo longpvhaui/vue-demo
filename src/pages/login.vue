@@ -1,9 +1,8 @@
 <script setup>
-import { VForm } from 'vuetify/components/VForm'
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import axios from '@axios'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
+import background from '@images/bic/bic_background.png'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
 import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
 import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
@@ -16,6 +15,7 @@ import {
   emailValidator,
   requiredValidator,
 } from '@validators'
+import { VForm } from 'vuetify/components/VForm'
 
 const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
@@ -70,28 +70,15 @@ const onSubmit = () => {
     class="auth-wrapper bg-surface"
   >
     <VCol
-      lg="8"
+      lg="9"
       class="d-none d-lg-flex"
     >
-      <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
-        <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="505"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
-          />
-        </div>
-
-        <VImg
-          :src="authThemeMask"
-          class="auth-footer-mask"
-        />
-      </div>
+      <VImg :src="background" />
     </VCol>
 
     <VCol
       cols="12"
-      lg="4"
+      lg="3"
       class="auth-card-v2 d-flex align-center justify-center"
     >
       <VCard
@@ -104,13 +91,6 @@ const onSubmit = () => {
             :nodes="themeConfig.app.logo"
             class="mb-6"
           />
-
-          <h5 class="text-h5 mb-1">
-            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
-          </h5>
-          <p class="mb-0">
-            Please sign-in to your account and start the adventure
-          </p>
         </VCardText>
         <VCardText>
           <VAlert
@@ -147,7 +127,7 @@ const onSubmit = () => {
               <VCol cols="12">
                 <AppTextField
                   v-model="password"
-                  label="Password"
+                  label="Mật khẩu"
                   :rules="[requiredValidator]"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :error-messages="errors.password"
@@ -158,13 +138,13 @@ const onSubmit = () => {
                 <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
                   <VCheckbox
                     v-model="rememberMe"
-                    label="Remember me"
+                    label="Ghi nhớ"
                   />
                   <RouterLink
                     class="text-primary ms-2 mb-1"
                     :to="{ name: 'forgot-password' }"
                   >
-                    Forgot Password?
+                    Quên mật khẩu?
                   </RouterLink>
                 </div>
 
@@ -172,38 +152,8 @@ const onSubmit = () => {
                   block
                   type="submit"
                 >
-                  Login
+                  Đăng nhập
                 </VBtn>
-              </VCol>
-
-              <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <span>New on our platform?</span>
-                <RouterLink
-                  class="text-primary ms-2"
-                  :to="{ name: 'register' }"
-                >
-                  Create an account
-                </RouterLink>
-              </VCol>
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-                <span class="mx-4">or</span>
-                <VDivider />
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <AuthProvider />
               </VCol>
             </VRow>
           </VForm>
@@ -215,6 +165,9 @@ const onSubmit = () => {
 
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
+.v-img__img--contain {
+    object-fit: cover !important;
+}
 </style>
 
 <route lang="yaml">

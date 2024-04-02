@@ -5,11 +5,13 @@ import { createStore } from 'vuex'
 // export const SOME_MUTATION = 'SOME_MUTATION'
 // Modules
 import brand from './bic-module/brand'
+import cttv from './bic-module/cttv'
 
 
 export default createStore({
   modules: {
     brand,
+    cttv,
   },
   actions: {
 

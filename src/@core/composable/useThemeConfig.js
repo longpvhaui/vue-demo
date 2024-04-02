@@ -1,6 +1,6 @@
-import { useTheme } from 'vuetify'
 import { useLayouts } from '@layouts'
 import { themeConfig } from '@themeConfig'
+import { useTheme } from 'vuetify'
 
 export const isDarkPreferred = usePreferredDark()
 export const useThemeConfig = () => {
@@ -54,8 +54,8 @@ export const useThemeConfig = () => {
 
     watch(theme, () => {
       // ℹ️ We are not using theme.current.colors.surface because watcher is independent and when this watcher is ran `theme` computed is not updated
-      localStorage.setItem(`${themeConfig.app.title}-initial-loader-bg`, vuetifyTheme.current.value.colors.surface)
-      localStorage.setItem(`${themeConfig.app.title}-initial-loader-color`, vuetifyTheme.current.value.colors.primary)
+      localStorage.setItem(`${themeConfig.app.title}-initial-loader-bg`, '#FFFFFF')
+      localStorage.setItem(`${themeConfig.app.title}-initial-loader-color`, '#00665a')
     }, {
       immediate: true,
     })

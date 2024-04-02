@@ -6,9 +6,10 @@ export default [
       {
         title: 'CRM',
         to: 'dashboards-crm',
+        action: 'read',
       },
     ],
-    badgeContent: '3',
+    badgeContent: '1',
     badgeClass: 'bg-primary',
   },
 ]

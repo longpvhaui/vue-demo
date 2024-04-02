@@ -4,7 +4,6 @@ import { useThemeConfig } from '@core/composable/useThemeConfig'
 
 // Components
 import Footer from '@/layouts/components/Footer.vue'
-import NavBarI18n from '@/layouts/components/NavBarI18n.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 
 // @layouts plugin
@@ -12,6 +11,21 @@ import { VerticalNavLayout } from '@layouts'
 
 const { appRouteTransition, isLessThanOverlayNavBreakpoint } = useThemeConfig()
 const { width: windowWidth } = useWindowSize()
+
+const menuItem = [{ heading: 'BIC Module' },
+  {
+    title: 'Chi nhánh',
+    icon: { icon: 'tabler-smart-home' },
+
+    // children: [
+    //   { title: 'List', to: 'bic-brands-list' },
+    // ],
+    to: 'bic-brands',
+
+    //     badgeContent: '1',
+    badgeClass: 'bg-primary',
+
+  }]
 </script>
 
 <template>
@@ -30,8 +44,10 @@ const { width: windowWidth } = useWindowSize()
             icon="tabler-menu-2"
           />
         </IconBtn>
+     
         <VSpacer />
-        <NavBarI18n class="me-1" />
+   
+        <!-- <NavBarI18n class="me-1" /> -->
         <UserProfile />
       </div>
     </template>
@@ -52,6 +68,6 @@ const { width: windowWidth } = useWindowSize()
     </template>
 
     <!-- 👉 Customizer -->
-    <TheCustomizer />
+    <!-- <TheCustomizer /> -->
   </VerticalNavLayout>
 </template>

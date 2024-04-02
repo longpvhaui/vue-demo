@@ -1,1 +1,6 @@
 // Write your overrides
+.layout-page-content, .layout-navbar, .layout-footer {
+        max-inline-size: 100%!important;
+        padding-left: 1rem!important;
+        padding-right: 1rem!important;
+    }

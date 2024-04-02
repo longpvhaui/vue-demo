@@ -18,8 +18,8 @@
             />
           </VCol>
           <VCol
-            cols="2"
-            md="2"
+            cols="3"
+            md="3"
             sm="12"
           >
             <VTextField
@@ -28,34 +28,8 @@
             />
           </VCol>
           <VCol
-            cols="2"
-            md="2"
-            sm="12"
-          >
-            <VSelect
-              v-model="searchOrganization"
-              :items="itemsOrganization"
-              label="Đại lý?"
-              clearable
-              density="compact"
-            />
-          </VCol>
-          <VCol
-            cols="2"
-            md="2"
-            sm="12"
-          >
-            <VSelect
-              v-model="searchCredit"
-              :items="itemsCredit"
-              label="Tổ chức tín dụng?"
-              clearable
-              density="compact"
-            />
-          </VCol>
-          <VCol
-            cols="2"
-            md="2"
+            cols="3"
+            md="3"
             sm="12"
           >
             <VSelect
@@ -100,7 +74,7 @@
                   variant="outlined"
                   color="info"
                   size="x-small"
-                  @click="search"
+                  @click="download"
                 />
               </template>
               <span>Xuất Excel</span>
@@ -111,31 +85,16 @@
       <!-- </VCardText> -->
     </VCard>
     <br>
-  
     <VDataTable
       v-model:sort-by="sortBy"
       v-model="selected"
       :headers="headers"
       :items="dataSource"
       :items-per-page="10"
-      striped
-      :group-by="groupBy"
       no-data-text="Không có dữ liệu"
+      show-current-page
       density="comfortable"
     >
-      <!-- eslint-disable-next-line -->
-    <template #item.actions="{ item }">
-        <div class="d-flex gap-1">
-          <IconBtn @click="editItem(item)">
-            <VIcon icon="tabler-edit" />
-          </IconBtn>
-          <IconBtn @click="deleteItem(item)">
-            <VIcon icon="tabler-trash" />
-          </IconBtn>
-        </div>
-      </template>
-
-     
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.TrangThai="{ item }">
         <VChip
@@ -147,101 +106,40 @@
           {{ getStatus(item.value.TrangThai) }}
         </VChip>
       </template> 
-      <!-- eslint-disable-next-line vue/valid-v-slot -->
-      <template #item.TenToChuc="{item}">
-        <a @click="editItem(item.value)"> {{ item.value.TenToChuc }}</a>
-      </template>
-      
-      <template #data-table-group="{ props, item, count }">
-        <td>
-          <VBtn
-            v-bind="props"
-            variant="text"
-            density="comfortable"
-          >
-            <VIcon
-              class="flip-in-rtl"
-              :icon="props.icon"
-            />
-          </VBtn>
 
-          <span>{{ item.value }}</span>
-          <span>({{ count }})</span>
-        </td>
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.TenCTTV="{item}">
+        <a @click="editItem(item.value)"> {{ item.value.TenCTTV }}</a>
       </template>
     </VDataTable>
 
-
     <VDialog
-      v-model="editDialog"
+      v-model="detailDialog"
       max-width="800px"
     >
       <VCard class="pa-sm-8 pa-5">
         <VCardItem>
           <VCardTitle class="text-h4 mb-3">
-            Chi tiết đại lý/ tổ chức
+            Chi tiết thông tin Công ty thành viên
           </VCardTitle>
         </VCardItem>
-
-        
-      
         <VContainer>
           <div class="mx-sm-4">
             <div class="d-flex align-center">
-              <VRadioGroup
-                v-model="radioGroup"
-                inline
+              <VCol
+                cols="3"
+                md="3"
               >
-                <VCol
-                  cols="6"
-                  md="6"
-                >
-                  <VRadio
-                    label="Đại lý"
-                    value="radio-1"
-                    density="compact"
-                  />
-                </VCol>
-                <VCol
-                  cols="6"
-                  md="6"
-                >
-                  <VRadio
-                    label="Không phải đại lý"
-                    value="radio-2"
-                    density="compact"
-                  />
-                </VCol>
-              </VRadioGroup>
-            </div>
-          </div>
-          <div class="mx-sm-4">
-            <div class="d-flex align-center">
-              <VRadioGroup
-                v-model="radioGroup2"
-                inline
+                <h6 class="text-sm font-weight-medium me-10">
+                  Mã CTTV/ CN:
+                </h6>
+              </VCol>
+              <VCol
+                cols="9"
+                md="9"
               >
-                <VCol
-                  cols="6"
-                  md="6"
-                >
-                  <VRadio
-                    label="Tổ chức tín dụng"
-                    value="radio-3"
-                    density="compact"
-                  />
-                </VCol>
-                <VCol
-                  cols="6"
-                  md="6"
-                >
-                  <VRadio
-                    label="Không phải tổ chức tín dụng"
-                    value="radio-4"
-                    density="compact"
-                  />
-                </VCol>
-              </VRadioGroup>
+                <AppTextField v-model="editedItem.MaCTTV" />
+              </VCol>
             </div>
           </div>
           <div class="mx-sm-4">
@@ -251,40 +149,14 @@
                 md="3"
               >
                 <h6 class="text-sm font-weight-medium me-10">
-                  Mã tổ chức:
+                  Tên CTTV/ CN:
                 </h6>
               </VCol>
               <VCol
                 cols="9"
                 md="9"
               >
-                <AppTextField v-model="editedItem.MaToChuc" />
-              </VCol>
-            </div>
-          </div>
-      
-          <!--
-            <AppTextField
-            v-model="editedItem.LoaiToChuc"
-            label="Loại tổ chức"
-            /> 
-          -->
-
-          <div class="mx-sm-4">
-            <div class="d-flex align-center">
-              <VCol
-                cols="3"
-                md="3"
-              >
-                <h6 class="text-sm font-weight-medium me-10">
-                  Loại tổ chức:
-                </h6>
-              </VCol>
-              <VCol
-                cols="9"
-                md="9"
-              >
-                <AppTextField v-model="editedItem.LoaiToChuc" />
+                <AppTextField v-model="editedItem.TenCTTV" />
               </VCol>
             </div>
           </div>
@@ -297,7 +169,7 @@
                 md="3"
               >
                 <h6 class="text-sm font-weight-medium me-10">
-                  Địa chỉ:
+                  Mã số thuế:
                 </h6>
               </VCol>
 
@@ -305,10 +177,7 @@
                 cols="9"
                 md="9"
               >
-                <AppTextarea
-                  v-model="editedItem.DiaChi"
-                  auto-grow
-                />
+                <AppTextField v-model="editedItem.MaSoThue" />
               </VCol>
             </div>
           </div>
@@ -320,32 +189,14 @@
                 md="3"
               >
                 <h6 class="text-sm font-weight-medium me-10">
-                  Số điện thoại:
+                  Đại diện:
                 </h6>
               </VCol>
               <VCol
                 cols="9"
                 md="9"
               >
-                <AppTextField v-model="editedItem.SoDienThoai" />
-              </VCol>
-            </div>
-          </div>
-          <div class="mx-sm-4">
-            <div class="d-flex align-center">
-              <VCol
-                cols="3"
-                md="3"
-              >
-                <h6 class="text-sm font-weight-medium me-10">
-                  Mã số thuế:
-                </h6>
-              </VCol>
-              <VCol
-                cols="9"
-                md="9"
-              >
-                <AppTextField v-model="editedItem.MaSoThue" />
+                <AppTextField v-model="editedItem.NguoiDaiDien" />
               </VCol>
             </div>
           </div>
@@ -392,14 +243,14 @@
                 md="3"
               >
                 <h6 class="text-sm font-weight-medium me-10">
-                  Hiệu lực từ ngày:
+                  Điện thoại:
                 </h6>
               </VCol>
               <VCol
                 cols="9"
                 md="9"
               >
-                <AppTextField v-model="editedItem.HieuLucTuNgay" />
+                <AppTextField v-model="editedItem.DienThoai" />
               </VCol>
             </div>
           </div>
@@ -410,14 +261,35 @@
                 md="3"
               >
                 <h6 class="text-sm font-weight-medium me-10">
-                  Hiệu lực đến ngày:
+                  Email:
                 </h6>
               </VCol>
               <VCol
                 cols="9"
                 md="9"
               >
-                <AppTextField v-model="editedItem.HieuLucDenNgay" />
+                <AppTextField v-model="editedItem.Email" />
+              </VCol>
+            </div>
+          </div>
+          <div class="mx-sm-4">
+            <div class="d-flex align-center">
+              <VCol
+                cols="3"
+                md="3"
+              >
+                <h6 class="text-sm font-weight-medium me-10">
+                  Địa chỉ
+                </h6>
+              </VCol>
+              <VCol
+                cols="9"
+                md="9"
+              >
+                <AppTextarea
+                  v-model="editedItem.DiaChi"
+                  auto-grow
+                />
               </VCol>
             </div>
           </div>
@@ -446,7 +318,6 @@
             </div>
           </div>
         </VContainer>
-  
        
       
         <VCardActions>
@@ -462,46 +333,6 @@
         </VCardActions>
       </VCard>
     </VDialog>  
-   
-
-
-    <!-- 👉 Delete Dialog  -->
-
-    <!--   
-      <VDialog
-      v-model="deleteDialog"
-      max-width="800px"
-      >
-      <VCard class="pa-sm-8 pa-5">
-      <VCardItem class="text-center">
-      <VCardTitle class="text-h5 mb-3">
-      Bạn có chắc chắn xóa sản phẩm {{ editedItem.raw.tensanpham }} này không?
-      </VCardTitle>
-      </VCardItem>
-      <VCardActions>
-      <VSpacer />
-
-      <VBtn
-      color="error"
-      variant="outlined"
-      @click="closeDelete"
-      >
-      Hủy
-      </VBtn>
-
-      <VBtn
-      color="success"
-      variant="elevated"
-      @click="deleteItemConfirm"
-      >
-      OK
-      </VBtn>
-
-      <VSpacer />
-      </VCardActions>
-      </VCard>
-      </VDialog> 
-    -->
   </div>
 </template>
 
@@ -509,119 +340,95 @@
 import store from '@/store'
 import { defineComponent } from 'vue'
 import { VDataTable } from 'vuetify/labs/VDataTable'
-
+import * as XLSX from 'xlsx/xlsx.mjs'
 
 export default defineComponent({
   components: {
     VDataTable,
   },
   // eslint-disable-next-line vue/component-api-style
-  data() {
+  data(){
     return {
-      sortBy: [{ key: 'ToChucId', order: 'asc' }],
-      brandName: 'Hello!',
-      message: '',
-      selected: [],
-      editedItem: {},
       isMounted: false,
-      radioGroup: 'radio-1',
-      radioGroup2: 'radio-3',
-      groupBy: [{ key: 'TenToChucCha' }],
+      sortBy: [{ key: 'ToChucId', order: 'asc' }],
+      selected: [],
+      detailDialog: false,
+      editedItem: {},
       headers: [
         {
-          title: 'Đại lý/ Tổ chức cha',
-          key: 'data-table-group',
-        },
-
-        // {
-        //   title: 'ID',
-        //   sortable: true,
-        //   key: 'ToChucID',
-        // },
-        {
-          title: 'Mã Tổ chức',
-          key: 'MaToChuc',
+          title: 'Mã CTTV',
+          sortable: true,
+          key: 'MaCTTV',
         },
         {
-          title: 'Tên Tổ Chức',
-          key: 'TenToChuc',
-        },
-        {
-          title: 'Loại Tổ Chức',
-          key: 'LoaiToChuc',
+          title: 'Tên CTTV',
+          key: 'TenCTTV',
         },
         {
           title: 'Mã số thuế',
           key: 'MaSoThue',
         },
         {
-          title: 'Số ĐT',
-          key: 'SoDienThoai',
+          title: 'Người đại diện',
+          key: 'NguoiDaiDien',
         },
         {
-          title: 'Trạng Thái',
+          title: 'Số tài khoản',
+          key: 'SoTaiKhoan',
+        },
+        {
+          title: 'Tại ngân hàng',
+          key: 'TaiNganHang',
+        },
+        {
+          title: 'Điện thoại',
+          key: 'DienThoai',
+        },
+        {
+          title: 'Email',
+          key: 'Email',
+        },
+        {
+          title: 'Trạng thái',
           key: 'TrangThai',
         },
-
-        // {
-        //   title: 'Hành động',
-        //   key: 'actions',
-        //   sortable: false,
-        // },
       ],
-      deleteDialog: false,
-      editDialog: false,
       itemsSearch: [
-        { title: 'Tên đại lý/ Tổ chức', value: 0 }, 
-        { title: 'Mã đại lý / Tổ chức', value: 1 }, 
-        { title: 'Tên CN đại lý/ Tổ chức', value: 2 }, 
-        { title: 'Mã CN đại lý/ Tổ chức', value: 3 }, 
+        { title: 'Tên CTTV/ CN', value: 0 }, 
+        { title: 'Mã số thuế', value: 1 }, 
+        { title: 'Số điện thoại', value: 2 }, 
+        { title: 'Email', value: 3 }, 
       ],
       itemsStatus: [
         { title: 'Đang hoạt động', value: 1 }, 
         { title: 'Không hoạt động', value: 0 },
       ],
-      itemsOrganization: [
-        { title: 'Đại lý', value: 0 },
-        { title: 'Không phải đại lý', value: 1 },
-      ],
-      itemsCredit: [
-        { title: 'Tổ chức tín dụng', value: 0 },
-        { title: 'Không phải TCTD', value: 1 },
-      ],
-   
-      searchSelect: { title: 'Tên đại lý/ Tổ chức', value: 0 },
+      searchSelect: { title: 'Tên CTTV', value: 0 },
       searchText: '',
       searchStatus: {
         title: 'Đang hoạt động',
         value: 1,
       },
-      searchCredit: { title: 'Tổ chức tín dụng', value: 0 },
-      searchOrganization: { title: 'Đại lý', value: 0 },
-      
+
+    
     }
   },
   // eslint-disable-next-line vue/component-api-style
   computed: {
-    greeting() {
-      return  this.brandName + this.message
-    },
     dataSource(){
       if(this.isMounted){
-        return store.state.brand.brands
+        return store.state.cttv.listCTTV
       }else return []
     },
   },
   // eslint-disable-next-line vue/component-api-style
-  created() {
-    store.dispatch('brand/fetchBrandName')
-  },
-
-  // eslint-disable-next-line vue/component-api-style
   mounted() {
     this.isMounted = true
   }, 
-  
+  // eslint-disable-next-line vue/component-api-style
+  created() {
+    store.dispatch('cttv/fetchListCTTV')
+  },
   // eslint-disable-next-line vue/component-api-style
   methods: {
     getColor(status) {
@@ -639,54 +446,45 @@ export default defineComponent({
       else 
         return 'Ngừng hoạt động'
     },
+    async search(){
+      let searchModel = {
+        'searchSelect': this.searchSelect.value,
+        'searchText': this.searchText,
+        'searchStatus': this.searchStatus.value,
+      }
+      await store.dispatch('cttv/search', searchModel)
+    },
     async editItem(item){
-      this.editDialog = true
+      this.detailDialog = true
 
-      await store.dispatch('brand/getDetail', item.ToChucID)
-      console.log('long:', store.state.brand.brand)
+      // await store.dispatch('brand/getDetail', item.ToChucID)
+      // console.log('long:', store.state.brand.brand)
       this.editedItem = item  
 
     },
     close(){
-      this.editDialog = false
+      this.detailDialog = false
     },
-    save(){
-      
-    },
-    deleteItem(item){
-      this.deleteDialog = true,
-      this.editedItem  = item
-    },
-    closeDelete(){
-      this.deleteDialog = false
-    },
-    deleteItemConfirm(){
-      this.closeDelete()
-    },
-    async search(){
-      let searchModel = {
-        'searchText': this.searchText,
-        'searchSelect': this.searchSelect.value,
-        'searchStatus': this.searchStatus.value,
-        'searchCredit': this.searchCredit.value,
-        'searchOrganization': this.searchOrganization.value,
-      } 
-      await store.dispatch('brand/search', searchModel)
+    download(){
+      const data = [
+        { name: 'CTTV1', email: 'cttv1@gmail.com', phone: '091231232131' },
+        { name: 'CTTV2', email: 'cttv2@gmail.com', phone: '091231232331' },
+        { name: 'CTTV3', email: 'cttv3@gmail.com', phone: '091233123211' },
+        { name: 'CTTV4', email: 'cttv4@gmail.com', phone: '091231243131' },
+        { name: 'CTTV5', email: 'cttv5@gmail.com', phone: '091235464131' },
+        { name: 'CTTV6', email: 'cttv6@gmail.com', phone: '091231232341' },
+      ]
+
+      const workbook = XLSX.utils.book_new()
+      const worksheet = XLSX.utils.json_to_sheet(this.dataSource)
+
+      XLSX.utils.book_append_sheet(workbook, worksheet, "template")
+      XLSX.writeFile(workbook, 'template.xlsx')
     },
   },
 })
 </script>
 
+ <!-- eslint-disable-next-line vue/no-empty-component-block -->
 <style>
-     @import './index.scss';
-     .custom-btn-search{
-      margin-top: 13px;
-     }
 </style>
-
-<route lang="yaml">
-  meta:
-    layout: default
-    action: read
-    subject: Auth
-  </route>
